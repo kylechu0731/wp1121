@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>My Diary</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="index.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"
+      integrity="sha512-aoTNnqZcT8B4AmeCFmiSnDlc4Nj/KPaZyB5G7JnOnUEkdNpCZs1LCankiYi01sLTyWy+m2P+W4XM+BuQ3Q4/Dg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <div id="top-bar">
+      <span>My Diary</span>
+      <select id="tag-filter">
+        <option value="">Any</option>
+      </select>
+      <select id="mood-filter">
+        <option value="">Any</option>
+      </select>
+      <button id="add-diary">New Diary</button>
+    </div>
+    <section id="preview-region"></section>
+    <section id="detail-region">
+      <div id="overlay"></div>
+      <div id="viewer" data-id="">
+        <span id="viewer-date"></span>
+        <span id="viewer-tag"></span>
+        <span id="viewer-mood"></span>
+        <h id="viewer-text"></h>
+        <button id="viewer-delete">DELETE</button>
+        <button id="viewer-edit">EDIT</button>
+      </div>
+      <div id="editor" data-new="">
+        <span id="editor-date">
+          <input type="number" placeholder="YYYY" id="input-year">
+          <span>.</span>
+          <input type="number" placeholder="MM" id="input-month">
+          <span>.</span>
+          <input type="number" placeholder="DD" id="input-date">
+          <span id="editor-youbi"></span>
+        </span>
+        <button id="editor-tag"></button>
+        <button id="editor-mood"></button>
+        <textarea id="editor-text" placeholder="How's your day?"></textarea>
+        <button id="editor-cancel">CANCEL</button>
+        <button id="editor-save">SAVE</button>
+      </div>
+    </section>
+  </body>
+
+  <template id="diary-card-template">
+    <button class="diary-card">
+      <div>
+        <span class="diary-card-date"></span>
+        <span class="diary-card-tag"></span>
+        <span class="diary-card-mood"></span>
+      </div>
+      <br>
+      <div class="diary-card-preview"></div>
+    </button>
+  </template>
+
+</html>
