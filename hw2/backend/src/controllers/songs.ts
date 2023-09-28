@@ -34,7 +34,7 @@ export const getSongs = async (_: Request, res: Response<GetSongsResponse>) => {
 };
 
 // Get a song
-export const getCard = async (
+export const getSong = async (
   req: Request<{ id: string }>,
   res: Response<GetSongResponse | { error: string }>,
 ) => {
@@ -59,7 +59,7 @@ export const getCard = async (
 };
 
 // Create a song
-export const createCard = async (
+export const createSong = async (
   req: Request<never, never, CreateSongPayload>,
   res: Response<CreateSongResponse | { error: string }>,
 ) => {
