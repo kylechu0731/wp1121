@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material";
 import { SongListProps } from "./ListButton";
-import ClearIcon from '@mui/icons-material/Clear';
 import { deleteSong } from "@/utils/client";
 import useSongs from "@/hooks/useSongs";
 

@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { useState } from "react";
 
 export default function Menu(props:{click:(e: SongListProps) => void}) {
-  const { lists, fetchLists, fetchSongs } = useSongs();
+  const { lists } = useSongs();
   const [editEnable, setEditEnable] = useState(false);
   const [newListDialogOpen, setNewListDialogOpen] = useState(false);
 

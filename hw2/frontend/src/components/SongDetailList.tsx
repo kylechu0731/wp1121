@@ -1,12 +1,11 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { SongListProps } from "./ListButton"
-import { Box, Button, Checkbox, Dialog, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled } from "@mui/material";
+import { Box, Checkbox, Dialog, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled } from "@mui/material";
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import useSongs from "@/hooks/useSongs";
-import { createSong, getLists, getSongs } from "@/utils/client";
+import { createSong, getSongs } from "@/utils/client";
 import EditDialog from "./EditDialog";
-import { LogoutSharp } from "@mui/icons-material";
 
 type SongDetailListProps = {
   list: SongListProps;
@@ -14,7 +13,6 @@ type SongDetailListProps = {
   setCheckedList: (e: string[]) => void;
   allchecked: boolean;
   setAllChecked: (e: boolean) => void;
-  reset: () => void;
 }
 
 const CssTableHeadCell = styled(TableCell) ({
@@ -34,10 +32,6 @@ const CssTableBodyCell = styled(TableCell) ({
   borderBottomColor: "#222222"
 });
 
-// const menu: SongListProps = {
-//   id: "", name: "", description: "", songs: []
-// };
-
 function SongDetail(songId: string, list: SongListProps): string[] {
   for(const song of list.songs) {
     if(song.id === songId)
@@ -46,14 +40,10 @@ function SongDetail(songId: string, list: SongListProps): string[] {
   return ["0","1","2","3"]
 }
 
-const menu: SongListProps = {
-  id: "", name: "", description: "", songs: []
-};
-
 export default function SongDetailList(props: SongDetailListProps) {
-  const { list, checkedList, setCheckedList, allchecked, setAllChecked, reset } = props;
+  const { list, checkedList, setCheckedList, allchecked, setAllChecked } = props;
   //const[allchecked, setAllChecked] = useState(false);
-  const { lists, fetchLists, fetchSongs } = useSongs();
+  const { lists, fetchSongs } = useSongs();
   //const [list, setList] = useState<SongListProps>(menu);
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

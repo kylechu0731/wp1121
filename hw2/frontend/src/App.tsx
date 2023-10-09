@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import HeaderBar from "@/components/HeaderBar";
-import NewListDialog from "@/components/NewListDialog";
-import { Button, Grid } from "@mui/material";
-import Box from '@mui/material/Box';
 
 import useSongs from "@/hooks/useSongs";
-//import SongList from "./components/SongList";
 import Menu from "./components/Menu";
 import type { SongListProps } from "./components/ListButton";
 import SongPage from "./components/SongPage";
@@ -15,7 +11,7 @@ const menu: SongListProps = {
 };
 
 function App() {
-  const { lists, fetchLists, fetchSongs } = useSongs();
+  const { fetchLists, fetchSongs } = useSongs();
   const [page, setPage] = useState<SongListProps>(menu);
 
   useEffect(() => {
@@ -30,7 +26,7 @@ function App() {
       { page === menu &&
         <Menu click={setPage}/> }
       { page !== menu &&
-        <SongPage ori_list={page} reset={setPage} Back={() => setPage(() => menu)} /> }
+        <SongPage ori_list={page} Back={() => setPage(() => menu)} /> }
     </>
   );
 }

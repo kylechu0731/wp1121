@@ -6,8 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 
 import App from "./App.tsx";
-import { SongProvider } from "./hooks/useSongs.tsx";
-// import '@fontsource/roboto/500.css';
+import SongProvider from "./hooks/SongProvider.tsx";
 import "./index.css";
 
 const myTheme = createTheme({
@@ -17,11 +16,9 @@ const myTheme = createTheme({
     },
     primary: {
       main: "#1DB954"
-      //main: "#3E8EDE",
     },
     secondary: {
       main: "#1DB954"
-      //main: "#00CCFF",
     }
   },
   typography: {

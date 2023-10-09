@@ -1,23 +1,21 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { CssTextField } from "./NewListDialog";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { createSong } from "@/utils/client";
 import useSongs from "@/hooks/useSongs";
 import { SongListProps } from "./ListButton";
-import { SongProps } from "./Song";
 
 type NewSongDialogProps = {
   open: boolean;
   CloseDialog: () => void;
-  reset: (e: SongListProps) => void;
   list: SongListProps;
 };
 
-export default function NewSongDialog({ open, CloseDialog, reset, list }: NewSongDialogProps) {
+export default function NewSongDialog({ open, CloseDialog, list }: NewSongDialogProps) {
   const titleInputRef = useRef<HTMLInputElement>(null);
   const singerInputRef = useRef<HTMLInputElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
-  const { lists, fetchLists, fetchSongs } = useSongs();
+  const { fetchSongs } = useSongs();
 
   const handleAddSong = async () => {
     if(!titleInputRef.current ||

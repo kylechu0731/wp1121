@@ -1,4 +1,4 @@
-import { Box, Button, ClickAwayListener, Input, Typography } from "@mui/material";
+import { Box, Button, ClickAwayListener, Input } from "@mui/material";
 import { SongListProps } from "./ListButton";
 import ReplyIcon from '@mui/icons-material/Reply';
 import AddIcon from '@mui/icons-material/Add';
@@ -13,14 +13,13 @@ import DeleteSongDialog from "./DeleteSongDialog";
 
 type SongPageProps = {
   ori_list: SongListProps;
-  reset: (e: SongListProps) => void;
   Back: () => void;
 }
 
-export default function SongPage({ori_list, reset, Back}: SongPageProps) {
+export default function SongPage({ori_list, Back}: SongPageProps) {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const descriptionInputRef = useRef<HTMLInputElement>(null);
-  const { lists, fetchLists, fetchSongs } = useSongs();
+  const { lists, fetchLists } = useSongs();
   const [newSongDialogOpen, setNewSongDialogOpen] = useState(false);
   const [delSongDialogOpen, setDelSongDialogOpen] = useState(false);
   const [checkedList, setCheckedList] = useState<string[]>([]);
@@ -198,7 +197,6 @@ export default function SongPage({ori_list, reset, Back}: SongPageProps) {
         <NewSongDialog
           open={newSongDialogOpen}
           CloseDialog={() => setNewSongDialogOpen(false)}
-          reset={reset}
           list={list}
         />
       </Box>
@@ -208,7 +206,6 @@ export default function SongPage({ori_list, reset, Back}: SongPageProps) {
         setCheckedList={setCheckedList}
         allchecked={allchecked}
         setAllChecked={setAllChecked}
-        reset={Back}
       />
       <DeleteSongDialog
         open={delSongDialogOpen}
