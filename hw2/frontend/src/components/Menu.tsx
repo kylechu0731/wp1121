@@ -1,4 +1,4 @@
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import ListButton, { SongListProps } from "./ListButton";
 import NewListDialog from "./NewListDialog";
 import useSongs from "@/hooks/useSongs";
@@ -23,7 +23,14 @@ export default function Menu(props:{click:(e: SongListProps) => void}) {
         gap: "15px"
         }}
       >
-        
+        <Typography
+          color="white"
+          fontFamily="Major Mono Display"
+          fontSize="30px"
+          ml="30px"
+        >
+          My PlayList
+        </Typography>
         <Button
           color="secondary"
           variant="outlined"
@@ -31,7 +38,8 @@ export default function Menu(props:{click:(e: SongListProps) => void}) {
           startIcon={ editEnable? <EditIcon /> : <DeleteIcon /> }
           sx={{ 
             marginLeft: "auto",
-            fontFamily: "Roboto Mono"
+            fontFamily: "Roboto Mono",
+            maxHeight: "40px"
           }}
           onClick={ () => setEditEnable(!editEnable) }
         >
@@ -43,7 +51,7 @@ export default function Menu(props:{click:(e: SongListProps) => void}) {
           variant="outlined"
           size="medium"
           startIcon={<PlaylistAddIcon />}
-          sx={{ fontFamily: "Roboto Mono" }}
+          sx={{ fontFamily: "Roboto Mono", maxHeight: "40px" }}
           onClick={ () => setNewListDialogOpen(true) }
         >
           ADD

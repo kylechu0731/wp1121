@@ -1,62 +1,63 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { CssTextField } from "./NewListDialog";
-import { useEffect, useRef } from "react";
-import { createSong } from "@/utils/client";
+import { useRef } from "react";
+import { updateSong } from "@/utils/client";
 import useSongs from "@/hooks/useSongs";
 import { SongListProps } from "./ListButton";
-import { SongProps } from "./Song";
 
-type NewSongDialogProps = {
+type EditDialogProps = {
   open: boolean;
-  CloseDialog: () => void;
-  reset: (e: SongListProps) => void;
+  Close: () => void;
+  detail: string[];
   list: SongListProps;
 };
 
-export default function NewSongDialog({ open, CloseDialog, reset, list }: NewSongDialogProps) {
+export default function EditDialog(props: EditDialogProps) {
   const titleInputRef = useRef<HTMLInputElement>(null);
   const singerInputRef = useRef<HTMLInputElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
-  const { lists, fetchLists, fetchSongs } = useSongs();
-
-  const handleAddSong = async () => {
+  const { open, Close, detail, list } = props;
+  const { fetchSongs } = useSongs();
+  
+  const handleUpdateSong = async () => {
     if(!titleInputRef.current ||
        !singerInputRef.current ||
        !linkInputRef.current) return;
+    
     if(!titleInputRef.current.value) {
-      alert("Please enter a title!");
+      alert("Please enter a list name!");
       return;
     }
     if(!linkInputRef.current.value) {
-      alert("Plase enter a link!");
+      alert("Please enter a link!");
       return;
     }
 
     for(const song of list.songs) {
       if(song.title === titleInputRef.current.value &&
-         song.singer === singerInputRef.current.value) {
-        alert("The song with the same title and singer already exists.");
+         song.singer === singerInputRef.current.value &&
+         song.id !== detail[0]) {
+        alert("The song with the same title and singe already exists.");
         return;
       }
     }
 
     try {
-      await createSong({
+      await updateSong(detail[0], {
         title: titleInputRef.current.value,
         singer: singerInputRef.current.value,
-        link: linkInputRef.current.value,
-        list_id: list.id
+        link: linkInputRef.current.value
       });
       fetchSongs();
     } catch (error) {
-      alert("Error: Failed to save song");
+      alert("Error: Failed to update song!");
     } finally {
-      CloseDialog();
+      Close();
     }
   }
-  
+
   return (
-    <Dialog open={open} onClose={CloseDialog}
+    <Dialog open={open} onClose={Close}
       sx={{
         backdropFilter: "blur(3px)"
       }}
@@ -67,11 +68,12 @@ export default function NewSongDialog({ open, CloseDialog, reset, list }: NewSon
         }
       }}
     >
-      <DialogTitle>New Song</DialogTitle>
+      <DialogTitle>Edit song</DialogTitle>
       <DialogContent>
         <div>
           <CssTextField
             required
+            defaultValue={detail[1]}
             inputRef={titleInputRef}
             label="Title"
             variant="standard"
@@ -86,10 +88,12 @@ export default function NewSongDialog({ open, CloseDialog, reset, list }: NewSon
         </div>
         <div>
           <CssTextField
+            defaultValue={detail[2]}
             inputRef={singerInputRef}
             label="Singer"
             variant="standard"
             sx={{ mx: 1, mt: 1 }}
+            autoFocus
             InputProps={{
               style: {
                 color: "#fff",
@@ -100,10 +104,12 @@ export default function NewSongDialog({ open, CloseDialog, reset, list }: NewSon
         <div>
           <CssTextField
             required
+            defaultValue={detail[3]}
             inputRef={linkInputRef}
             label="Link"
             variant="standard"
             sx={{ mx: 1, mt: 1 }}
+            autoFocus
             InputProps={{
               style: {
                 color: "#fff",
@@ -113,8 +119,8 @@ export default function NewSongDialog({ open, CloseDialog, reset, list }: NewSon
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleAddSong}>add</Button>
-        <Button onClick={CloseDialog}>cancel</Button>
+        <Button onClick={handleUpdateSong}>add</Button>
+        <Button onClick={Close}>cancel</Button>
       </DialogActions>
     </Dialog>
   );

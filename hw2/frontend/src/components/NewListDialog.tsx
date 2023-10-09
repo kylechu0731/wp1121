@@ -25,13 +25,22 @@ export const CssTextField = styled(TextField) ({
 export default function NewListDialog({open, onClose}: NewListDialogProps) {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const descriptionInputRef = useRef<HTMLInputElement>(null);
-  const { fetchLists } = useSongs(); 
+  const { lists, fetchLists } = useSongs();
 
   const handleAddList = async () => {
-    if(nameInputRef.current?.value === "") {
+    if(!nameInputRef.current) return
+    if(nameInputRef.current.value === "") {
       alert("Please enter a list name!");
       return;
     }
+
+    for(const list of lists) {
+      if(nameInputRef.current.value === list.name) {
+        alert("The list named \""+ nameInputRef.current.value + "\" already exists.");
+        return;
+      }
+    }
+
     try {
       await createList({ name: nameInputRef.current?.value ?? "", 
         description: descriptionInputRef.current?.value ?? "" });

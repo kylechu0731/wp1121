@@ -40,6 +40,14 @@ export default function SongPage({ori_list, reset, Back}: SongPageProps) {
   const handleUpdateName = async () => {
     if (!nameInputRef.current) return;
 
+    for(const ll of lists) {
+      if(ll.name === nameInputRef.current.value && ll.id !== list.id) {
+        alert("The list named \""+ nameInputRef.current.value + "\" already exists.");
+        nameInputRef.current.value = list.name;
+        return;
+      }
+    }
+
     const newName = nameInputRef.current.value;
     if (newName !== list.name) {
       try {
@@ -85,8 +93,12 @@ export default function SongPage({ori_list, reset, Back}: SongPageProps) {
   };
 
   const handleDeleteSongs = async () => {
+    
     if(!checkedList.length)
       alert("Choose the songs you want to delete!")
+    else if(!nameInputRef.current || !nameInputRef.current.value) {
+      alert("Please enter a list name at first!")
+    }
     else {
       setDelSongDialogOpen(true);
     }
@@ -105,8 +117,7 @@ export default function SongPage({ori_list, reset, Back}: SongPageProps) {
             src="https://lineimg.omusic.com.tw/img/album/1758075.jpg?v=20200423151455"
             style={{
               width: "180px",
-              borderRadius: "20px",
-              filter: "blur(1px)"
+              borderRadius: "20px"
             }}
           />
         </Box>
@@ -188,7 +199,7 @@ export default function SongPage({ori_list, reset, Back}: SongPageProps) {
           open={newSongDialogOpen}
           CloseDialog={() => setNewSongDialogOpen(false)}
           reset={reset}
-          listId={list.id}
+          list={list}
         />
       </Box>
       <SongDetailList 
@@ -197,6 +208,7 @@ export default function SongPage({ori_list, reset, Back}: SongPageProps) {
         setCheckedList={setCheckedList}
         allchecked={allchecked}
         setAllChecked={setAllChecked}
+        reset={Back}
       />
       <DeleteSongDialog
         open={delSongDialogOpen}

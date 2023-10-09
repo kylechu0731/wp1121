@@ -4,7 +4,9 @@ import { Box, Button, Checkbox, Dialog, DialogTitle, IconButton, List, ListItem,
 
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import useSongs from "@/hooks/useSongs";
-import { createSong } from "@/utils/client";
+import { createSong, getLists, getSongs } from "@/utils/client";
+import EditDialog from "./EditDialog";
+import { LogoutSharp } from "@mui/icons-material";
 
 type SongDetailListProps = {
   list: SongListProps;
@@ -12,6 +14,7 @@ type SongDetailListProps = {
   setCheckedList: (e: string[]) => void;
   allchecked: boolean;
   setAllChecked: (e: boolean) => void;
+  reset: () => void;
 }
 
 const CssTableHeadCell = styled(TableCell) ({
@@ -35,14 +38,27 @@ const CssTableBodyCell = styled(TableCell) ({
 //   id: "", name: "", description: "", songs: []
 // };
 
+function SongDetail(songId: string, list: SongListProps): string[] {
+  for(const song of list.songs) {
+    if(song.id === songId)
+      return [song.id, song.title, song.singer, song.link];    
+  }
+  return ["0","1","2","3"]
+}
+
+const menu: SongListProps = {
+  id: "", name: "", description: "", songs: []
+};
+
 export default function SongDetailList(props: SongDetailListProps) {
-  const { list, checkedList, setCheckedList, allchecked, setAllChecked } = props;
+  const { list, checkedList, setCheckedList, allchecked, setAllChecked, reset } = props;
   //const[allchecked, setAllChecked] = useState(false);
   const { lists, fetchLists, fetchSongs } = useSongs();
   //const [list, setList] = useState<SongListProps>(menu);
   const [menuOpen, setMenuOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleCheckBoxClick = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = e.target;
@@ -69,6 +85,18 @@ export default function SongDetailList(props: SongDetailListProps) {
     if(!anchorEl) return;
     for(const song of list.songs) {
       if(song.id === anchorEl.id) {
+
+        for(const list of lists) {
+          if(list.id === listId) {
+            for(const ss of list.songs) {
+              if(ss.title === song.title && ss.singer === song.singer) {
+                alert("The list \"" + list.name + "\" has a song with the same title and singer already.");
+                return;
+              }
+            }
+          }
+        }
+
         try {
           createSong({
             title: song.title,
@@ -81,6 +109,8 @@ export default function SongDetailList(props: SongDetailListProps) {
           alert("Error: Failed to add song to other list!");
         } finally {
           setDialogOpen(false);
+          await getSongs();
+          window.location.reload();
         }
       }
     }
@@ -121,7 +151,14 @@ export default function SongDetailList(props: SongDetailListProps) {
                   <CssTableBodyCell>{song.title}</CssTableBodyCell>
                   <CssTableBodyCell>{song.singer}</CssTableBodyCell>
                   <CssTableBodyCell>
-                    <a href={song.link} style={{ color: "#999999" }}>{song.link}</a>
+                    <a 
+                      href={song.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "#999999" }}
+                    >
+                      {song.link}
+                    </a>
                   </CssTableBodyCell>
                   <CssTableBodyCell>
                     <IconButton size="small" 
@@ -154,7 +191,14 @@ export default function SongDetailList(props: SongDetailListProps) {
             color: "#fff"
         }}}
       >
-        <MenuItem>Edit</MenuItem>
+        <MenuItem 
+          onClick={() => {
+            setEditDialogOpen(true);
+            setMenuOpen(false);
+            }}
+        >
+          Edit
+        </MenuItem>
         { (lists.length > 1) &&
           <MenuItem onClick={() => {
             setMenuOpen(false);
@@ -164,6 +208,9 @@ export default function SongDetailList(props: SongDetailListProps) {
           </MenuItem> }
       </Menu>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}
+        sx={{
+          backdropFilter: "blur(3px)"
+        }}
         PaperProps={{
           style: {
             backgroundColor: "#333333",
@@ -182,6 +229,12 @@ export default function SongDetailList(props: SongDetailListProps) {
           ))}
         </List>
       </Dialog>
+      <EditDialog 
+        open={editDialogOpen}
+        Close={() => setEditDialogOpen(false)}
+        detail={SongDetail(anchorEl?.id ?? "", list)}
+        list={list}
+      />
     </>
   );
 }

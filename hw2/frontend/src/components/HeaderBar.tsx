@@ -9,6 +9,7 @@ import InputBase from '@mui/material/InputBase';
 // import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import SpeakerRoundedIcon from '@mui/icons-material/SpeakerRounded';
+import useSongs from '@/hooks/useSongs';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -56,6 +57,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
+  const { lists } = useSongs();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar 
@@ -78,7 +81,6 @@ export default function SearchAppBar() {
           >
             WP Music
           </Typography>
-          
         </Toolbar>
       </AppBar>
     </Box>
