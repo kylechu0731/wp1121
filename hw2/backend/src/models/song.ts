@@ -20,7 +20,7 @@ const SongSchema = new mongoose.Schema<SongDocument>(
     },
     singer: {
       type: String,
-      required: true,
+      required: false,
     },
     link: {
       type: String,

@@ -13,8 +13,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Routes
-app.use("/api/songs", SongRoutes);
-app.use("/api/lists", ListRoutes);
+app.use("/api/kc_songs", SongRoutes);
+app.use("/api/kc_lists", ListRoutes);
 
 app.get("/heartbeat", (_, res) => {
   return res.send({ message: "Hello World!" });

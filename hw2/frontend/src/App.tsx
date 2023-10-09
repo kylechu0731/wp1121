@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import HeaderBar from "@/components/HeaderBar";
+import NewListDialog from "@/components/NewListDialog";
+import { Button, Grid } from "@mui/material";
+import Box from '@mui/material/Box';
+
+import useSongs from "@/hooks/useSongs";
+//import SongList from "./components/SongList";
+import Menu from "./components/Menu";
+import type { SongListProps } from "./components/ListButton";
+import SongPage from "./components/SongPage";
+
+const menu: SongListProps = {
+  id: "", name: "", description: "", songs: []
+};
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { lists, fetchLists, fetchSongs } = useSongs();
+  const [page, setPage] = useState<SongListProps>(menu);
+
+  useEffect(() => {
+    fetchLists();
+    fetchSongs();
+  }, [fetchSongs, fetchLists]);
+
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <HeaderBar />
+      { page === menu &&
+        <Menu click={setPage}/> }
+      { page !== menu &&
+        <SongPage ori_list={page} reset={setPage} Back={() => setPage(() => menu)} /> }
     </>
-  )
+  );
 }
 
-export default App
+export default App;

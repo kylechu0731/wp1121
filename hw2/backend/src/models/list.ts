@@ -20,7 +20,7 @@ const ListSchema = new mongoose.Schema<ListDocument>(
     },
     description: {
       type: String,
-      required: true,
+      required: false,
     },
     songs: [
       {

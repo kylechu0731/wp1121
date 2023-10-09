@@ -44,7 +44,7 @@ export type DeleteSongResponse = "OK";
 
 export type GetListsResponse = Omit<ListData, "songs">[];
 
-export type CreateListPayload = Omit<ListData, "id" | "songs">;
+export type CreateListPayload = Omit<ListData, "id" |"songs">;
 
 export type CreateListResponse = Pick<ListData, "id">;
 
