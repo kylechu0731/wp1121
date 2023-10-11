@@ -3,7 +3,7 @@
 ### Launch
 At first, please `git clone` this repository into your computer.
 
-Then, rename the file `backend/.env.example` to `backend/.env`, and fill in 
+Then, rename the file `backend/.env.example` to `backend/.env`, an fill in 
 
 ```env
 PORT = 8000
