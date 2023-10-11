@@ -1,7 +1,7 @@
 # Web Programming HW#2 "WP Music"
 
 Please ensure that your internet connection and mongodb is on.
-There might be some issue due to 
+There might be some issue due to instable connetion. Please wait patiently and feel free to refresh the page.
 
 ## Run the app
 
