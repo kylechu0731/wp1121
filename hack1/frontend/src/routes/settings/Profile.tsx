@@ -84,8 +84,17 @@ const Profile = (): React.ReactNode => {
           {/* You should use a `Textarea` component */}
           {/* It should have a placeholder of "Tell us a little bit about yourself" */}
           {/* It is not required */}
-          <p className="text-destructive">Replace me</p>
-          {/* End of TODO 5.1 */}
+          <p className="text-destructive">
+            <FormItem>
+                <label>Bio</label>
+                <FormControl>
+                  <Textarea
+                    placeholder="Tell us a little bit about yourself"
+                  />
+                </FormControl>
+              </FormItem>
+          </p>
+          {/* End of TODO 4.1 */}
           <FormField
             control={form.control}
             name="sex"
@@ -103,7 +112,7 @@ const Profile = (): React.ReactNode => {
                     {/* Use the `GenderItem` component to render each item */}
                     {/* Send the `gender` as a prop to the `GenderItem` component */}
                     <p className="text-destructive">Replace me</p>
-                    {/* End of TODO 5.2 */}
+                    {/* End of TODO 4.2 */}
                   </RadioGroup>
                 </FormControl>
                 <FormMessage />
