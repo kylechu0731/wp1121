@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Homework 3
+
+POSTGRESQL problems may be solved in ['https://ric2k1.notion.site/Free-postgresql-tutorial-f99605d5c5104acc99b9edf9ab649199']
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+yarn
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### For Docker Users
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+docker compose up -d
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+If you've used the port for another database, please run  
 
-## Learn More
+```bash
+docker compose down
+```
 
-To learn more about Next.js, take a look at the following resources:
+at the database folder at first (If you are confident that changing the port number won't cause any problem you may feel free to change) (I once changed it and something unexplanable happened...)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+then create a `.env.local` and fill in
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+POSTGRES_URL="postgres://postgres:postgres@localhost:5432/joinme"
+```
 
-## Deploy on Vercel
+finally,
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+yarn migrate
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### For Neon Users
+
+Since Neon requires Internet connection, please please please be patient for any lag.
+If a `TIMEOUT` problem happens and page cannot be loaded, please `yarn dev` again to restart the app (and make sure your Internet connection is stable enough).
+
+Create a `.env.local` and fill in your connection url
+
+```bash
+POSTGRES_URL=<your connection url>
+```
+
+then
+
+```
+yarn migrate
+```
