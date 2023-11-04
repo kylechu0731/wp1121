@@ -2,9 +2,6 @@
 
 import { useRef, useState } from "react";
 
-import { usePathname, useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -19,6 +16,8 @@ import { Label } from "@/components/ui/label";
 import { DatePicker } from "./ui/datepicker";
 import { cn, earlier, morethanaweek } from "@/lib/utils";
 import { NewEventAlertDialog } from "./NewEventAlertDialog";
+import useEvent from "@/hooks/useEvent";
+import useUserInfo from "@/hooks/useUserInfo";
 
 type NewEventDialogProps = {
   dialogOpen: boolean;
@@ -29,12 +28,7 @@ export default function NewEventDialog({
   dialogOpen,
   setDialogOpen,
 }: NewEventDialogProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const eventnameInputRef = useRef<HTMLInputElement>(null);
-  // const startTimeInputRef = useRef<HTMLInputElement>(null);
-  // const endTimeInputRef = useRef<HTMLInputElement>(null);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
   const [nameError, setNameError] = useState(false);
@@ -46,11 +40,13 @@ export default function NewEventDialog({
   const [startEmpty, setStartEmpty] = useState(false);
   const [endEmpty, setEndEmpty] = useState(false);
   const [alertDialogOpen, setAlertDialogOpen] = useState(false);
+  const { launchEvent } = useEvent();
+  const { username } = useUserInfo();
 
   // handleSave modifies the query params to set the username and handle
   // we get from the input fields. src/app/page.tsx will read the query params
   // and insert the user into the database.
-  const handleSave = () => {
+  const handleSave = async () => {
     let result = true;
     
     const eventname = eventnameInputRef.current?.value;
@@ -96,6 +92,21 @@ export default function NewEventDialog({
     }
 
     if(result) {
+      if(!eventname || !username || !startDate || !endDate) return;
+      try {
+        await launchEvent({
+          eventname,
+          hostname: username,
+          startdate: startDate,
+          enddate: endDate,
+          starthour: starttime,
+          endhour: endtime
+        })
+      } catch(error) {
+        console.log(error);
+        alert(error);
+      }
+
       setDialogOpen(false);
       setStartDate(undefined);
       setEndDate(undefined);
@@ -106,8 +117,8 @@ export default function NewEventDialog({
     return result;
   };
 
-  const handleOpenChange = (open: boolean) => {
-    if (open)
+  const handleOpenChange = (e: boolean) => {
+    if (e)
       setDialogOpen(true);
     else
       setAlertDialogOpen(true);
@@ -159,7 +170,7 @@ export default function NewEventDialog({
                 Start at
               </Label>
               <DatePicker
-                className={cn("w-[200px]",
+                className={cn("w-[204px]",
                             (startEmpty || timeError === 1) && "border-red-500 text-red-500")}
                 date={startDate}
                 setDate={setStartDate}
@@ -183,7 +194,7 @@ export default function NewEventDialog({
                 End at
               </Label>
               <DatePicker
-                className={cn("w-[200px]",
+                className={cn("w-[204px]",
                             (endEmpty || timeError === 2) && "border-red-500 text-red-500")}
                 date={endDate}
                 setDate={setEndDate}

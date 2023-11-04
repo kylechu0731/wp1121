@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { Permanent_Marker } from 'next/font/google'
 import { cn } from "@/lib/utils";
+import UserName from "./UserName";
 
 const font_pm = Permanent_Marker({
   subsets: ["latin"],
@@ -27,9 +28,11 @@ export default function HeaderBar() {
           onClick={() => router.push("/")}
         >Change User</Button>
       </div>
-      <div className="ml-3 mt-10">
-        Welcome! @{username}
-      </div>
+      <UserName
+        className="mr-auto mt-10 ml-3 text-3xl"
+        className2="-mt-[2px]"
+        username={username}
+      />
     </>
   );
 }

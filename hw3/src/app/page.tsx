@@ -1,39 +1,9 @@
-import Event from "@/components/Event";
+import EventRegion from "@/components/EventRegion";
 import HeaderBar from "@/components/HeaderBar";
 import NameDialog from "@/components/NameDialog";
-import NewEventButton from "@/components/NewEventButton";
-import SearchBar from "@/components/SearchBar";
 import { db } from "@/db";
-import { usersTable } from "@/db/schema";
-import { Search } from "lucide-react";
-
-const event1 = {
-  id: 1,
-  hostName: "Alex",
-  eventName: "Allons faire des devoirs !",
-  startDate: new Date(2023, 10, 27),
-  endDate: new Date(2023, 10, 31),
-  startHour: 13,
-  endHour: 18,
-  joiners: 10,
-  joined: true,
-  createdAt: new Date(2023, 10, 13, 10, 18),
-};
-
-const event2 = {
-  id: 2,
-  hostName: "Jerry",
-  eventName: "Qui pourra dormir avec moi le soir prochain ?",
-  startDate: new Date(2023, 10, 28),
-  endDate: new Date(2023, 10, 28),
-  startHour: 18,
-  endHour: 23,
-  joiners: 2,
-  joined: false,
-  createdAt: new Date(2023, 10, 27, 23, 59),
-};
-
-const tempEvents = [event1, event2];
+import { eventsTable, joinsTable, usersTable } from "@/db/schema";
+import { desc, eq, sql } from "drizzle-orm";
 
 type HomeProps = {
   searchParams: {
@@ -49,38 +19,57 @@ export default async function Home({
     await db
       .insert(usersTable)
       .values({ userName: username })
+      .onConflictDoNothing()
       .execute();
   }
 
-  return (
+  const joinsSubquery = db.$with("joins_count").as(
+    db
+      .select({
+        eventId: joinsTable.eventId,
+        joins: sql<number | null>`count(*)`.mapWith(Number).as("joins"),
+      })
+      .from(joinsTable)
+      .groupBy(joinsTable.eventId)
+  );
+
+  const joinedSubquery = db.$with("joined").as(
+    db
+      .select({
+        eventID: joinsTable.eventId,
+        joined: sql<number>`1`.mapWith(Boolean).as("joined"),
+      })
+      .from(joinsTable)
+      .where(eq(joinsTable.joinerName, username ?? "")),
+  );
+
+  const events = await db
+    .with(joinsSubquery, joinedSubquery)
+    .select({
+      id: eventsTable.id,
+      eventName: eventsTable.eventName,
+      hostName: eventsTable.hostName,
+      startDate: eventsTable.startDate,
+      endDate: eventsTable.endDate,
+      startHour: eventsTable.startHour,
+      endHour: eventsTable.endHour,
+      joins: joinsSubquery.joins,
+      joined: joinedSubquery.joined,
+    })
+    .from(eventsTable)
+    .orderBy(desc(eventsTable.createdAt))
+    .leftJoin(joinsSubquery, eq(eventsTable.id, joinsSubquery.eventId))
+    .leftJoin(joinedSubquery, eq(eventsTable.id, joinedSubquery.eventID))
+    .execute()
+
+  return ( 
     <>
       <main className="mx-auto flex-col">
         <HeaderBar />
-        <div className="w-full flex">
-          <div className="m-5 flex gap-3 grow">
-            <Search size={27} className="my-auto bg-gray-800 rounded-full text-white p-1"/>
-            <SearchBar />
-          </div>
-          <div className="mr-5 my-auto">
-            <NewEventButton />
-          </div>
-        </div>
-        {tempEvents.map((event) => (
-          <Event
-            key={event.id}
-            username={username}
-            id={event.id}
-            hostName={event.hostName}
-            eventName={event.eventName}
-            startDate={event.startDate}
-            endDate={event.endDate}
-            startHour={event.startHour}
-            endHour={event.endHour}
-            joiners={event.joiners}
-            joined={event.joined}
-            createdAt={event.createdAt}
-          />
-          ))}
+        <EventRegion
+          events={events}
+          username={username ?? ""}
+        />
         <NameDialog />
       </main>
     </>
