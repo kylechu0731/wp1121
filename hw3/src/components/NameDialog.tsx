@@ -96,8 +96,7 @@ export default function NameDialog() {
             </Label>
             <Input
               placeholder="KyleVictor"
-              /** Change "Kyle Victor" */
-              defaultValue={searchParams.get("username") ?? "KyleVictor"}
+              defaultValue={searchParams.get("username") ?? ""}
               className={cn(usernameError && "border-red-500", "col-span-3")}
               ref={usernameInputRef}
             />

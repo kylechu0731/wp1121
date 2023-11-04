@@ -98,12 +98,6 @@ export default async function EventPage({
   return (
     <>
       <HomePageButton username={username ?? ""} />
-      {/* <UserName
-        className="ml-3 mt-3"
-        className2="text-4xl "
-        username={event.hostname}
-        size={35}
-      /> */}
       <div className="mt-5 ml-5 text-3xl font-bold">
         {event.eventname}
       </div>
@@ -145,23 +139,6 @@ export default async function EventPage({
           username={username}
         />
       </div>
-      {/* <time className="ml-2">
-        {event.starthour}:00{" · "}
-        <TimeText date={new Date(event.startdate)} format="D MMM YYYY" />
-        {" "}-{" "}
-        {event.endhour}:00{" · "}
-        <TimeText date={new Date(event.enddate)} format="D MMM YYYY" />
-        <div className="ml-2">
-          Click here to {event.joined? "quit":"join"} -{">"}
-          <JoinButton
-            initialJoins={event.joins}
-            initialJoined={event.joined}
-            eventId={event.id}
-            username={username}
-            size={30}
-          />
-        </div>
-      </time> */}
         <CommentBar 
           joined={event.joined}
           username={username ?? ""}

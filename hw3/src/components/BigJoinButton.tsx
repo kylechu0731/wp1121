@@ -65,7 +65,7 @@ export default function BigJoinButton({
               click to {joined? "quit":"join"}
             </text>
           <text className="-ml-3">
-            {joinsCount? `${joinsCount} joiners`:"be the first one to join!"}
+            {joinsCount} joiners
           </text>
           </div>
         </div>
