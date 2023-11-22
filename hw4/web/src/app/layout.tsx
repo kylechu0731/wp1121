@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import './globals.css'
 import { cn } from '@/lib/utils';
 import { UserProvider } from '@/context/user';
+import { RoomProvider } from '@/context/room';
 
 const inter = localFont({ 
   src: "./PixelifySans.ttf"
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className, "bg-black select-none")}>
-        <UserProvider>{children}</UserProvider>
+        <UserProvider>
+          {children}
+        </UserProvider>
       </body>
     </html>
   )

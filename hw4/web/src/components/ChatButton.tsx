@@ -16,7 +16,7 @@ export default function ChatButton({
   handleCancel: () => void
 }) {
   const { user, chatter } = useContext(UserContext);
-  const { deleteRoom } = useContext(RoomContext);
+  const { deleteRoom, setRead, reads } = useContext(RoomContext);
   const { deleteMessagesInRoom } = useContext(MessageContext);
 
   const handleDelete = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,23 +39,32 @@ export default function ChatButton({
       alert("Failed to delete messages in the room!");
       console.log(error);
     }
-
   }
+
+  const read = reads.find((read) => read.viewerId === name)?.read;
 
   return (
     <div 
-      className={cn(chatter === name ? "bg-white text-black" : "", "flex group p-1 hover:bg-white hover:text-black")}
-      onClick={chatter === name ? handleCancel : handleChat}
+      className={cn(chatter === name ? "bg-white text-black" : "", "flex group p-1 hover:bg-white hover:text-black cursor-pointer")}
+      onClick={chatter === name ? handleCancel : () => {
+        handleChat();
+        setRead(name, user, true);
+      }}
     > 
       <div className="flex flex-col">
         {name}
-        <div className={cn(chatter === name ? "text-gray-600" : "text-gray-400", "text-sm group-hover:text-gray-600")}>{preview}</div>
+        <div className={cn(chatter === name ? "text-gray-600" : "text-gray-400", !read && "text-gray-200", "text-sm group-hover:text-gray-600")}>{preview}</div>
       </div>
       {chatter === name &&
       <button 
         className="ml-auto mr-2 self-center text-xl hover:text-red-500"
         onClick={handleDelete}
       >X</button>
+      }
+      {(chatter !== name && !read) &&
+      <div 
+      className="ml-auto mr-2 text-sm rounded-[1px] self-center animate-bounce bg-red-600 h-fit px-1 text-yellow-200"
+      >NEW!!</div>
       }
     </div>
   );

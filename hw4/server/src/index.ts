@@ -41,6 +41,9 @@ io.on("connection", (socket) => {
   socket.on("set_announce", (viewerId: string, counterId: string, announceId: string) => {
     io.emit("set_announce", viewerId, counterId, announceId);
   })
+  socket.on("read_message", (viewerId: string, counterId: string) => {
+    io.emit("read_message", viewerId, counterId);
+  })
 });
 
 app.get("/", (req, res) => {

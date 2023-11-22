@@ -20,6 +20,7 @@ export async function GET(req: NextRequest) {
         viewerId: roomsTable.viewerId,
         counterId: roomsTable.counterId,
         announceId: roomsTable.announceId,
+        read: roomsTable.read,
         recentTime: roomsTable.recentTime
       })
       .from(roomsTable)
@@ -86,17 +87,19 @@ export async function PATCH(req: NextRequest) {
   try {
     await db
       .update(roomsTable)
-      .set({ recentTime: new Date() })
-      .where(
-        or(
-          and(
-            eq(roomsTable.viewerId, viewerId), eq(roomsTable.counterId, counterId)
-          ),
-          and(
-            eq(roomsTable.viewerId, counterId), eq(roomsTable.counterId, viewerId)
-          )
-        )
-      )
+      .set({ 
+        recentTime: new Date(),
+        read: false
+       })
+      .where(and(eq(roomsTable.viewerId, viewerId), eq(roomsTable.counterId, counterId)))
+      .execute();
+    await db
+      .update(roomsTable)
+      .set({ 
+        recentTime: new Date(),
+        read: true
+       })
+      .where(and(eq(roomsTable.viewerId, counterId), eq(roomsTable.counterId, viewerId)))
       .execute();
   } catch(error) {
     return NextResponse.json(

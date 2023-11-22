@@ -1,7 +1,8 @@
 "use client"
 
-import { createContext, useState } from "react";
+import { createContext } from "react";
 import { useRouter } from "next/navigation";
+import useState from "react-usestateref";
 
 export type UserContext = {
   user: string;
@@ -9,7 +10,8 @@ export type UserContext = {
   chatter: string;
   setChatter: (e: string) => void;
   saveUser: (displayId: string) => Promise<void>;
-  initialiseChatter: (id: string) => void;
+  initialiseChatter: (id: string) => boolean;
+  is_inRoom: (viewerId: string, counterId: string) => boolean;
 };
 
 export const UserContext = createContext<UserContext>({
@@ -18,7 +20,8 @@ export const UserContext = createContext<UserContext>({
   chatter: "",
   setChatter: () => {},
   saveUser: async () => {},
-  initialiseChatter: () => {}
+  initialiseChatter: () => false,
+  is_inRoom: () => false
 });
 
 type Props = {
@@ -26,8 +29,8 @@ type Props = {
 };
 
 export function UserProvider({ children }: Props) {
-  const [user, setUser] = useState("");
-  const [chatter, setChatter] = useState("");
+  const [user, setUser, userRef] = useState("");
+  const [chatter, setChatter, chatterRef] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -50,8 +53,13 @@ export function UserProvider({ children }: Props) {
   }
 
   const initialiseChatter = (id: string) => {
-    console.log("8");
+    const result = chatterRef.current === "_";
     setChatter((chatter) => chatter === "_" ? id : chatter);
+    return result;
+  }
+
+  const is_inRoom = (viewerId: string, counterId: string) => {
+    return (userRef.current === viewerId && chatterRef.current === counterId);
   }
 
   return (
@@ -61,7 +69,8 @@ export function UserProvider({ children }: Props) {
       chatter,
       setChatter,
       saveUser,
-      initialiseChatter
+      initialiseChatter,
+      is_inRoom
      }}>
       {children}
     </UserContext.Provider>

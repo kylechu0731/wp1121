@@ -6,5 +6,6 @@ export type Room = {
   viewerId: User["displayId"];
   counterId: User["displayId"];
   announceId: Message["id"];
+  read: boolean;
   recentTime: Date;
 };

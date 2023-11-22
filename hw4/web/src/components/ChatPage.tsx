@@ -12,9 +12,11 @@ export default function ChatPage() {
   const [hover, setHover] = useState(false);
   const { user, chatter } = useContext(UserContext);
   const { messages } = useContext(MessageContext);
-  const { chatRooms, setAnnounce } = useContext(RoomContext);
+  const { chatRooms, setAnnounce, setRead } = useContext(RoomContext);
 
-  useEffect(() => setSelectId(0), [chatter]);
+  useEffect(() => {
+    setSelectId(0);
+  }, [chatter]);
 
   const chatter_empty = chatRooms.filter((room) =>
     room.counterId === chatter
@@ -23,6 +25,8 @@ export default function ChatPage() {
   const filtered_messages = messages.filter((mess) => (
     mess.senderId === chatter || mess.receiverId === chatter
   ));
+
+  const latest_message = filtered_messages[filtered_messages.length - 1];
 
   const room = chatRooms.find((room) => room.viewerId === user && room.counterId === chatter)
 
@@ -60,7 +64,7 @@ export default function ChatPage() {
       </div>
       }
       <div className="flex flex-col">
-        <div className="flex flex-col overflow-hidden mt-3 gap-2 min-h-screen">
+        <div className="flex flex-col overflow-hidden mt-3 gap-2 h-fit">
           {filtered_messages.map((mess) =>
             <Message
               key={mess.id}
@@ -72,9 +76,14 @@ export default function ChatPage() {
               unsendState={mess.unsendState}
             />
           )}
+          { (room?.read && latest_message?.senderId === user) &&
+            <div className="flex text-gray-300 self-end mr-[1px] -mt-2">
+              read
+            </div>
+          }
         </div>
-        <ChatInput />
       </div>
+      <ChatInput />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import { useContext } from "react"
 
 export default function ProfileButton() {
-  const { user } = useContext(UserContext);
+  const { user, setChatter } = useContext(UserContext);
 
   if(!user) redirect("/"); // error redirect
 
@@ -18,6 +18,7 @@ export default function ProfileButton() {
       <Link
         href="/"
         className="text-center px-1 border-2 w-full border-black hover:border-white"
+        onClick={() => setChatter("")}
       >Change User</Link>
     </div>
   );

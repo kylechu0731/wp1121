@@ -6,7 +6,8 @@ import {
   index,
   timestamp,
   unique,
-  integer
+  integer,
+  boolean
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable(
@@ -63,6 +64,7 @@ export const roomsTable = pgTable(
         onDelete: "cascade"
       }),
     announceId: integer("announce_id").default(0),
+    read: boolean("read").default(false),
     recentTime: timestamp("recent_time").default(sql`now()`)
   },
   (table) => ({

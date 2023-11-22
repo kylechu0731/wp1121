@@ -40,7 +40,7 @@ export default function ChatInput() {
     setContent("");
   };
   return (
-    <form className="sticky bottom-0 flex bg-black pb-5 pt-1" onSubmit={handleSubmit}>
+    <form className="sticky mt-auto bottom-0 flex bg-black pb-5 pt-1" onSubmit={handleSubmit}>
       <input
         type="text"
         placeholder="Send Message..."

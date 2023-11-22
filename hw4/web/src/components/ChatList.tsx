@@ -15,7 +15,7 @@ export default function ChatList() {
   const [dialog, setDialog] = useState(false);
   const [search, setSearch] = useState("");
   const { chatRooms, fetchRooms } = useContext(RoomContext);
-  const { user, chatter, setChatter } = useContext(UserContext);
+  const { setChatter } = useContext(UserContext);
   const { messages } = useContext(MessageContext);
 
   useEffect(() => {
@@ -26,6 +26,12 @@ export default function ChatList() {
     const filtered_messages = messages.filter((mess) => mess.senderId === counterId || mess.receiverId === counterId);
     try {
       const recent_message = filtered_messages[filtered_messages.length - 1];
+      if(recent_message.unsendState === 1 && recent_message.receiverId === counterId)
+        return "You have unsent a message";
+      if (recent_message.unsendState === 2) {
+        if(recent_message.receiverId === counterId) return "You have unsent a message";
+        else return counterId + " has unsent a message";
+      }
       if(recent_message.content.length < 24) return recent_message.content;
       else return recent_message.content.slice(0, 24) + "..."
     } catch(error) {
@@ -73,7 +79,6 @@ export default function ChatList() {
           handleCancel={() => setChatter("")}
         />
       )}
-
     </div>
   );
 }
