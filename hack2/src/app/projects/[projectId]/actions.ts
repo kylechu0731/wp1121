@@ -7,7 +7,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db";
-import { tasksTable, usersToProjectsTable } from "@/db/schema";
+import { tasksRelations, tasksTable, usersToProjectsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { publicEnv } from "@/lib/env/public";
 
@@ -20,7 +20,7 @@ export async function getProject(projectId: string) {
 
   const userToProject = await db.query.usersToProjectsTable.findFirst({
     // TODO: 8. Select the correct project by userId and projectId
-
+    where: and(eq(usersToProjectsTable.projectId, projectId), eq(usersToProjectsTable.userId, userId)),
     // TODO: 8. end
     columns: {},
     with: {
@@ -100,7 +100,11 @@ export async function updateTaskComplete(
   });
 
   // TODO: 9. Update the task's `completed` column
-
+  await db
+    .update(tasksTable)
+    .set({ completed })
+    .where(and(eq(tasksTable.displayId, taskId), eq(tasksTable.projectId, projectId)))
+    .execute()
   // TODO: 9. end
 
   revalidatePath(`/projects/${projectId}`);
@@ -118,7 +122,9 @@ export async function deleteTask(taskId: string, projectId: string) {
   });
 
   // TODO: 10. Delete the task whose displayId is `taskId`
-
+  await db
+    .delete(tasksTable)
+    .where(and(eq(tasksTable.projectId, projectId), eq(tasksTable.displayId, taskId)))
   // TODO: 10. end
 
   revalidatePath(`/projects/${projectId}`);
