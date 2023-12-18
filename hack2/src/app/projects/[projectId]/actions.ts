@@ -7,7 +7,7 @@ import { and, asc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/db";
-import { tasksRelations, tasksTable, usersToProjectsTable } from "@/db/schema";
+import { tasksTable, usersToProjectsTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 import { publicEnv } from "@/lib/env/public";
 
