@@ -4,7 +4,7 @@
       "files": ["*.mjs", "*.ts", "*.tsx"],
       "parserOptions": {
         "project": "tsconfig.json",
-        "tsconfigRootDir": "./web",
+        "tsconfigRootDir": "./hw4/web",
         "sourceType": "module"
       }
     }
