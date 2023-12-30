@@ -66,6 +66,11 @@ or
 - email: b@gmail.com
 - password: 11111111
 
+### Workload
+
+- 林淳彥：概念發想，auth實作，pusher研究及實作，函數及功能實作。
+
+- 朱筠濠：UI設計，架構管理，前後端協調，pusher研究及實作，遊戲邏輯設計，deploy
 
 ### 心得
 
